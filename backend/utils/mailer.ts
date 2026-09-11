@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { config } from '../config';
 
@@ -30,7 +31,7 @@ export const sendEmail = async (options: SendMailOptions): Promise<{ success: bo
       console.log(`[Nodemailer Simulated] To: ${options.to} | Subject: ${options.subject}`);
       return {
         success: true,
-        messageId: `sim_${Date.now()}`,
+        messageId: crypto.randomUUID(),
         simulated: true,
       };
     }
@@ -54,7 +55,7 @@ export const sendEmail = async (options: SendMailOptions): Promise<{ success: bo
     // Graceful fallback for demo/development
     return {
       success: true,
-      messageId: `fallback_${Date.now()}`,
+      messageId: crypto.randomUUID(),
       simulated: true,
     };
   }

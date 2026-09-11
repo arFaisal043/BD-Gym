@@ -76,10 +76,14 @@ export default function App() {
     loadData();
   }, []);
 
-  // Strict route protection: normal users cannot view or remain on admin-portal
+  // Strict route protection: 
+  // 1. Normal users cannot view or remain on admin-portal
+  // 2. Admins cannot view or remain on member-dashboard
   useEffect(() => {
     if (activeTab === 'admin-portal' && !isAdminRole(currentUser?.role)) {
       setActiveTab(currentUser ? 'member-dashboard' : 'home');
+    } else if (activeTab === 'member-dashboard' && isAdminRole(currentUser?.role)) {
+      setActiveTab('admin-portal');
     }
   }, [activeTab, currentUser?.role]);
 
@@ -150,6 +154,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         currentUser={currentUser}
+        hasActiveMembership={!!activeMembership && (activeMembership.status === 'ACTIVE' || activeMembership.status === 'PAUSED')}
         notifications={notifications}
         onSwitchPersona={handleSwitchPersona}
         onLogout={handleLogout}

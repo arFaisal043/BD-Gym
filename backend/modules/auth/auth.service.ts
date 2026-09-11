@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { query } from '../../config/db';
 import { config } from '../../config';
@@ -21,7 +22,7 @@ export const AuthService = {
     }
 
     const hashedPassword = await bcrypt.hash(password, config.bcryptSaltRounds);
-    const userId = `usr_${Date.now()}`;
+    const userId = crypto.randomUUID();
     const avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`;
 
     const insertRes = await query(
@@ -39,7 +40,7 @@ export const AuthService = {
       `INSERT INTO notifications (id, user_id, title, message, type, is_read)
        VALUES ($1, $2, $3, $4, $5, FALSE)`,
       [
-        `notif_${Date.now()}`,
+        crypto.randomUUID(),
         user.id,
         'Welcome to GymFlow BD!',
         'Your membership account is now ready. Select a plan to begin your athletic journey at Banani Flagship.',
@@ -78,18 +79,13 @@ export const AuthService = {
 
     const user = res.rows[0];
 
-    // Verify password (supports bcrypt hash or direct match for demo accounts)
-    let isMatch = password === user.password;
-    if (!isMatch && user.password) {
+    let isMatch = false;
+    if (user.password) {
       try {
         isMatch = await bcrypt.compare(password, user.password);
       } catch (err) {
         isMatch = false;
       }
-    }
-    // Allow demo convenience logins
-    if (!isMatch && (password === '123456' || password === 'admin123' || password === 'password')) {
-      isMatch = true;
     }
 
     if (!isMatch) {

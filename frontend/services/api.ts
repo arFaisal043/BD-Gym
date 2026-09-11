@@ -62,11 +62,15 @@ export const api = {
   },
 
   async updateProfile(data: Partial<User>): Promise<{ success: boolean; user: User }> {
-    const res = await fetch('/api/users/me', {
-      method: 'PATCH',
+    const res = await fetch('/api/users/profile', {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Failed to update profile');
+    }
     return res.json();
   },
 

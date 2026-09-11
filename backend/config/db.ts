@@ -32,7 +32,7 @@ export const initDB = async (): Promise<void> => {
     // 1. Users table
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
-        id VARCHAR(64) PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         phone VARCHAR(50),
@@ -55,7 +55,7 @@ export const initDB = async (): Promise<void> => {
     // 2. Membership plans table
     await client.query(`
       CREATE TABLE IF NOT EXISTS membership_plans (
-        id VARCHAR(64) PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(255) NOT NULL,
         description TEXT,
         duration_months INT DEFAULT 1,
@@ -80,9 +80,9 @@ export const initDB = async (): Promise<void> => {
     // 3. Memberships table
     await client.query(`
       CREATE TABLE IF NOT EXISTS memberships (
-        id VARCHAR(64) PRIMARY KEY,
-        user_id VARCHAR(64) REFERENCES users(id) ON DELETE CASCADE,
-        plan_id VARCHAR(64),
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        plan_id UUID,
         plan_name VARCHAR(255) NOT NULL,
         status VARCHAR(50) DEFAULT 'ACTIVE',
         start_date TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -100,8 +100,8 @@ export const initDB = async (): Promise<void> => {
     // 4. Attendances / Check-ins table
     await client.query(`
       CREATE TABLE IF NOT EXISTS attendances (
-        id VARCHAR(64) PRIMARY KEY,
-        user_id VARCHAR(64) REFERENCES users(id) ON DELETE SET NULL,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID REFERENCES users(id) ON DELETE SET NULL,
         user_name VARCHAR(255),
         rfid_tag VARCHAR(100),
         zone VARCHAR(100) DEFAULT 'Main Gym Floor',
@@ -112,12 +112,12 @@ export const initDB = async (): Promise<void> => {
     // 5. Invoices & Payments table
     await client.query(`
       CREATE TABLE IF NOT EXISTS payments (
-        id VARCHAR(64) PRIMARY KEY,
-        user_id VARCHAR(64) REFERENCES users(id) ON DELETE CASCADE,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
         user_name VARCHAR(255),
         user_email VARCHAR(255),
-        membership_id VARCHAR(64),
-        plan_id VARCHAR(64),
+        membership_id UUID,
+        plan_id UUID,
         plan_name VARCHAR(255),
         transaction_id VARCHAR(100) UNIQUE NOT NULL,
         amount NUMERIC(10, 2) NOT NULL,
@@ -130,8 +130,8 @@ export const initDB = async (): Promise<void> => {
       );
       ALTER TABLE payments ADD COLUMN IF NOT EXISTS user_name VARCHAR(255);
       ALTER TABLE payments ADD COLUMN IF NOT EXISTS user_email VARCHAR(255);
-      ALTER TABLE payments ADD COLUMN IF NOT EXISTS membership_id VARCHAR(64);
-      ALTER TABLE payments ADD COLUMN IF NOT EXISTS plan_id VARCHAR(64);
+      ALTER TABLE payments ADD COLUMN IF NOT EXISTS membership_id UUID;
+      ALTER TABLE payments ADD COLUMN IF NOT EXISTS plan_id UUID;
       ALTER TABLE payments ADD COLUMN IF NOT EXISTS gateway_response TEXT;
       ALTER TABLE payments ADD COLUMN IF NOT EXISTS verified_at TIMESTAMP WITH TIME ZONE;
     `);
@@ -139,8 +139,8 @@ export const initDB = async (): Promise<void> => {
     // 6. Notifications table
     await client.query(`
       CREATE TABLE IF NOT EXISTS notifications (
-        id VARCHAR(64) PRIMARY KEY,
-        user_id VARCHAR(64) REFERENCES users(id) ON DELETE CASCADE,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
         message TEXT NOT NULL,
         type VARCHAR(50) DEFAULT 'SYSTEM',
@@ -152,7 +152,7 @@ export const initDB = async (): Promise<void> => {
     // 7. Inquiries table
     await client.query(`
       CREATE TABLE IF NOT EXISTS inquiries (
-        id VARCHAR(64) PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(255) NOT NULL,
         phone VARCHAR(50) NOT NULL,
         email VARCHAR(255) NOT NULL,
@@ -164,7 +164,7 @@ export const initDB = async (): Promise<void> => {
     // 8. Trainers table
     await client.query(`
       CREATE TABLE IF NOT EXISTS trainers (
-        id VARCHAR(64) PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(255) NOT NULL,
         image TEXT,
         specialization TEXT,
@@ -182,7 +182,7 @@ export const initDB = async (): Promise<void> => {
     // 9. Facilities table
     await client.query(`
       CREATE TABLE IF NOT EXISTS facilities (
-        id VARCHAR(64) PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(255) NOT NULL,
         zone_code VARCHAR(100),
         tag VARCHAR(50),
@@ -199,7 +199,7 @@ export const initDB = async (): Promise<void> => {
     // 10. FAQs table
     await client.query(`
       CREATE TABLE IF NOT EXISTS faqs (
-        id VARCHAR(64) PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         question TEXT NOT NULL,
         answer TEXT NOT NULL,
         category VARCHAR(50) DEFAULT 'membership'

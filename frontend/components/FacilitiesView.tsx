@@ -9,7 +9,7 @@ interface FacilitiesViewProps {
 
 export const FacilitiesView: React.FC<FacilitiesViewProps> = ({ facilities, onOpenVirtualTour }) => {
   const [selectedFloor, setSelectedFloor] = useState<number | 'all'>('all');
-  const [activeFacilityId, setActiveFacilityId] = useState<string>(facilities[0]?.id || 'fac_1');
+  const [activeFacilityId, setActiveFacilityId] = useState<string>(facilities[0]?.id || '');
 
   const filteredFacilities = facilities.filter(
     (f) => selectedFloor === 'all' || f.floor === selectedFloor

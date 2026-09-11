@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { query } from '../../config/db';
 import { AppError } from '../../utils/customError';
 
@@ -31,7 +32,7 @@ export const ContentService = {
    * Add a new trainer (admin)
    */
   async addTrainer(data: any) {
-    const id = `tr_${Date.now()}`;
+    const id = crypto.randomUUID();
     const res = await query(
       `INSERT INTO trainers (id, name, image, specialization, badge, experience, certifications, bio, athletes_mentored, is_active, rating, schedule)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, TRUE, 4.90, $10)
@@ -69,7 +70,7 @@ export const ContentService = {
       `INSERT INTO notifications (id, user_id, title, message, type)
        VALUES ($1, $2, $3, $4, 'SYSTEM')`,
       [
-        `notif_${Date.now()}`,
+        crypto.randomUUID(),
         userId,
         `Induction Booked with ${trainer.name}`,
         `Your 1-on-1 coaching assessment is scheduled for ${preferredTime || 'tomorrow at 10:00 AM'} at the Banani Flagship Hub.`,
@@ -118,7 +119,7 @@ export const ContentService = {
    * Record contact inquiry in PostgreSQL
    */
   async saveInquiry(payload: { name: string; phone: string; email: string; message: string }) {
-    const id = `inq_${Date.now()}`;
+    const id = crypto.randomUUID();
     await query(
       `INSERT INTO inquiries (id, name, phone, email, message)
        VALUES ($1, $2, $3, $4, $5)`,

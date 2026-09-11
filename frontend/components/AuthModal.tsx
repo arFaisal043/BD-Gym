@@ -64,38 +64,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ onClose, onSuccess }) => {
           </p>
         </div>
 
-        {/* Quick Demo Accounts Banner for easy sign-in */}
-        {!isRegister && (
-          <div className="mb-4 p-3 rounded-2xl bg-[#121318] border border-white/[0.08] text-xs space-y-2">
-            <span className="text-[10px] uppercase font-bold text-[#4edea3] tracking-wider block">
-              Quick Demo Accounts (Password: any password, e.g. 123456)
-            </span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('shakib@gymflow.bd');
-                  setPassword('123456');
-                }}
-                className="flex-1 py-1.5 px-2.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-left text-[#e3e1e9] text-[11px] transition-colors border border-white/5 cursor-pointer"
-              >
-                <span className="font-bold text-[#4edea3] block">Member (Shakib)</span>
-                <span className="text-[#bbcabf] text-[10px]">shakib@gymflow.bd</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('admin@gymflow.bd');
-                  setPassword('123456');
-                }}
-                className="flex-1 py-1.5 px-2.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-left text-[#e3e1e9] text-[11px] transition-colors border border-white/5 cursor-pointer"
-              >
-                <span className="font-bold text-[#c0c1ff] block">Director / Admin</span>
-                <span className="text-[#bbcabf] text-[10px]">admin@gymflow.bd</span>
-              </button>
-            </div>
-          </div>
-        )}
 
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-xs text-red-400 flex items-center gap-2">

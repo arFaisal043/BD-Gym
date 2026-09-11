@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { query } from '../../config/db';
 import { AppError } from '../../utils/customError';
 
@@ -31,8 +32,8 @@ export const PaymentService = {
     const plan = planRes.rows[0];
 
     const transactionId = `SSL-TXN-${Date.now().toString().slice(-9)}`;
-    const paymentId = `pay_${Date.now()}`;
-    const membershipId = `mem_${Date.now()}`;
+    const paymentId = crypto.randomUUID();
+    const membershipId = crypto.randomUUID();
 
     // Insert pending payment into PostgreSQL
     const payRes = await query(
@@ -200,7 +201,7 @@ export const PaymentService = {
         benefits, 
         created_at AS "createdAt"`,
       [
-        payment.membershipId || `mem_${Date.now()}`,
+        payment.membershipId || crypto.randomUUID(),
         payment.userId,
         payment.planId,
         payment.planName,
@@ -218,7 +219,7 @@ export const PaymentService = {
       `INSERT INTO notifications (id, user_id, title, message, type)
        VALUES ($1, $2, $3, $4, 'PAYMENT')`,
       [
-        `notif_${Date.now()}`,
+        crypto.randomUUID(),
         payment.userId,
         `Membership Activated: ${payment.planName}`,
         `৳ ${Number(payment.amount).toLocaleString()} confirmed via ${payment.paymentMethod}. Your membership pass is active at Banani Flagship.`,

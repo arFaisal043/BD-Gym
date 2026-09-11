@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { query } from '../../config/db';
 import { AppError } from '../../utils/customError';
 
@@ -108,7 +109,7 @@ export const MembershipService = {
       `INSERT INTO notifications (id, user_id, title, message, type)
        VALUES ($1, $2, $3, $4, 'MEMBERSHIP')`,
       [
-        `notif_${Date.now()}`,
+        crypto.randomUUID(),
         userId,
         newStatus === 'PAUSED' ? 'Membership Freeze Initiated' : 'Membership Resumed',
         newStatus === 'PAUSED'

@@ -16,7 +16,8 @@ import {
   Lock,
   Tag,
   Shield,
-  LogOut
+  LogOut,
+  Activity
 } from 'lucide-react';
 import type { MembershipPlan, Payment, User } from '../types';
 import { isAdminRole } from '../types';
@@ -205,95 +206,108 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-12 space-y-8">
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">
-        <div>
-          <span className="text-[11px] text-[#c0c1ff] uppercase font-bold tracking-widest">
-            FR-028 - FR-034 Administrative Command Center
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#e3e1e9] mt-1">
-            Banani Flagship Club Management
-          </h1>
-          <p className="text-xs text-[#bbcabf] mt-1">
-            Real-time telemetry, SSLCOMMERZ gateway verification audit, member lifecycle, and subscription pricing.
-          </p>
-        </div>
+      {/* Hero Header Banner */}
+      <div className="relative rounded-3xl overflow-hidden mb-8 border border-white/[0.08] bg-[#1a1b22]">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#c0c1ff]/10 to-[#10b981]/10 opacity-50 mix-blend-screen pointer-events-none" />
+        <div className="relative p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-2.5 py-1 rounded-md bg-[#c0c1ff]/15 text-[#c0c1ff] text-[10px] font-black uppercase tracking-widest border border-[#c0c1ff]/20">
+                Command Center
+              </span>
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]"></span>
+              </span>
+              <span className="text-[10px] text-[#4edea3] font-bold uppercase tracking-wider">Live System Telemetry</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-[#bbcabf] tracking-tight">
+              Banani Flagship Management
+            </h1>
+            <p className="text-sm text-[#bbcabf] mt-2 max-w-xl leading-relaxed">
+              Real-time SSLCOMMERZ gateway auditing, athlete lifecycle orchestration, and dynamic subscription tier pricing control.
+            </p>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={loadAdminData}
-            disabled={isLoading}
-            className="px-3.5 py-2 rounded-xl bg-[#292a2f] hover:bg-[#38393f] text-[#e3e1e9] text-xs font-semibold flex items-center gap-2 border border-white/[0.06]"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-[#4edea3]' : ''}`} />
-            <span>Refresh Telemetry</span>
-          </button>
-
-          {onLogout && (
+          <div className="flex items-center gap-3 shrink-0">
             <button
-              onClick={onLogout}
-              className="px-3.5 py-2 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 hover:text-red-300 text-xs font-bold flex items-center gap-2 border border-red-500/30 transition-all shadow-sm cursor-pointer"
-              title="Log out of Admin Portal"
+              onClick={loadAdminData}
+              disabled={isLoading}
+              className="px-5 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] text-[#e3e1e9] text-xs font-bold flex items-center gap-2 border border-white/10 transition-all cursor-pointer backdrop-blur-md shadow-lg"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Log Out</span>
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-[#4edea3]' : 'text-[#c0c1ff]'}`} />
+              <span>Refresh Telemetry</span>
             </button>
-          )}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="px-5 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold flex items-center gap-2 border border-red-500/20 transition-all cursor-pointer shadow-lg"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Log Out</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* KPI Stats Ribbon */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-[#1a1b21] border border-white/[0.08] shadow-lg">
-          <div className="flex items-center justify-between text-[#bbcabf] mb-2 text-xs">
-            <span>Total Gross Revenue</span>
-            <DollarSign className="w-4 h-4 text-[#4edea3]" />
+      {/* Modern KPI Stats Ribbon */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1a1b22] to-[#121318] border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.4)] group hover:-translate-y-1 transition-all duration-300">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-2xl bg-[#4edea3]/15 flex items-center justify-center border border-[#4edea3]/20 text-[#4edea3] group-hover:scale-110 transition-transform">
+              <DollarSign className="w-5 h-5" />
+            </div>
+            <div className="px-2 py-1 rounded-full bg-[#10b981]/15 text-[#4edea3] text-[10px] font-bold flex items-center gap-1 border border-[#10b981]/20">
+              <TrendingUp className="w-3 h-3" />
+              <span>+18.4%</span>
+            </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-[#e3e1e9] tracking-tight">
+          <p className="text-sm text-[#bbcabf] font-semibold">Total Gross Revenue</p>
+          <p className="text-3xl font-black text-white mt-1 tracking-tight">
             ৳ {dashboardData?.metrics?.totalRevenueBDT ? dashboardData.metrics.totalRevenueBDT.toLocaleString() : '128,500'}
           </p>
-          <p className="text-[11px] text-[#4edea3] mt-1 font-semibold flex items-center gap-1">
-            <TrendingUp className="w-3 h-3" /> +18.4% this month via SSLCOMMERZ
-          </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-[#1a1b21] border border-white/[0.08] shadow-lg">
-          <div className="flex items-center justify-between text-[#bbcabf] mb-2 text-xs">
-            <span>Active Athletes</span>
-            <Users className="w-4 h-4 text-[#4cd7f6]" />
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1a1b22] to-[#121318] border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.4)] group hover:-translate-y-1 transition-all duration-300">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-2xl bg-[#4cd7f6]/15 flex items-center justify-center border border-[#4cd7f6]/20 text-[#4cd7f6] group-hover:scale-110 transition-transform">
+              <Users className="w-5 h-5" />
+            </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-[#e3e1e9] tracking-tight">
+          <p className="text-sm text-[#bbcabf] font-semibold">Active Athletes</p>
+          <p className="text-3xl font-black text-white mt-1 tracking-tight">
             {dashboardData?.metrics?.activeMembers ?? 28}
           </p>
-          <p className="text-[11px] text-[#bbcabf] mt-1">
-            Registered RFID Turnstile Badges
-          </p>
+          <p className="text-[10px] text-[#4cd7f6] mt-2 font-semibold">RFID Badges Distributed</p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-[#1a1b21] border border-white/[0.08] shadow-lg">
-          <div className="flex items-center justify-between text-[#bbcabf] mb-2 text-xs">
-            <span>Banani Floor Capacity</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-[#4edea3] animate-ping" />
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1a1b22] to-[#121318] border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.4)] group hover:-translate-y-1 transition-all duration-300">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-2xl bg-[#c0c1ff]/15 flex items-center justify-center border border-[#c0c1ff]/20 text-[#c0c1ff] group-hover:scale-110 transition-transform">
+              <Activity className="w-5 h-5" />
+            </div>
+            <span className="flex h-3 w-3 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c0c1ff] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#c0c1ff]"></span>
+            </span>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-[#e3e1e9] tracking-tight">
-            63%
-          </p>
-          <p className="text-[11px] text-[#4edea3] mt-1 font-semibold">
-            Optimal Operating Threshold
-          </p>
+          <p className="text-sm text-[#bbcabf] font-semibold">Banani Floor Capacity</p>
+          <p className="text-3xl font-black text-white mt-1 tracking-tight">63%</p>
+          <p className="text-[10px] text-[#c0c1ff] mt-2 font-semibold">Optimal Operating Range</p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-[#1a1b21] border border-white/[0.08] shadow-lg">
-          <div className="flex items-center justify-between text-[#bbcabf] mb-2 text-xs">
-            <span>Pending / Expired</span>
-            <ShieldAlert className="w-4 h-4 text-yellow-400" />
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1a1b22] to-[#121318] border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.4)] group hover:-translate-y-1 transition-all duration-300">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 flex items-center justify-center border border-yellow-500/20 text-yellow-400 group-hover:scale-110 transition-transform">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-[#e3e1e9] tracking-tight">
+          <p className="text-sm text-[#bbcabf] font-semibold">Pending / Expired</p>
+          <p className="text-3xl font-black text-white mt-1 tracking-tight">
             {dashboardData?.metrics?.expiredMembers ?? 3}
           </p>
-          <p className="text-[11px] text-[#bbcabf] mt-1">
-            Automated SMS reminders dispatched
-          </p>
+          <p className="text-[10px] text-yellow-400 mt-2 font-semibold">SMS Reminders Dispatched</p>
         </div>
       </div>
 

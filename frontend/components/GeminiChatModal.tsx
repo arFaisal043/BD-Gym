@@ -77,7 +77,7 @@ How can I elevate your training today?`,
     if (!text.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
-      id: `usr_${Date.now()}`,
+      id: Date.now().toString(),
       role: 'user',
       content: text.trim(),
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),

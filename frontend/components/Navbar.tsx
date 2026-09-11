@@ -14,6 +14,7 @@ interface NavbarProps {
   onOpenCheckout: (planId?: string) => void;
   onMarkNotificationRead: (id: string) => void;
   onOpenGeminiChat?: () => void;
+  hasActiveMembership?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -27,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCheckout,
   onMarkNotificationRead,
   onOpenGeminiChat,
+  hasActiveMembership,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -34,18 +36,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
-  const baseNavItems = [
+  const publicNavItems = [
     { id: 'home', label: 'Home' },
     { id: 'plans-and-pricing', label: 'Plans & Pricing' },
     { id: 'facilities', label: 'Facilities' },
     { id: 'trainers', label: 'Trainers' },
-    { id: 'member-dashboard', label: 'Member Dashboard' },
   ];
 
-  // Only users with ADMIN / Director role can see the Admin Portal navigation item
-  const navItems = isAdminRole(currentUser?.role)
-    ? [...baseNavItems, { id: 'admin-portal', label: 'Admin Portal' }]
-    : baseNavItems;
+  let navItems = [...publicNavItems];
+  if (isAdminRole(currentUser?.role)) {
+    navItems.push({ id: 'admin-portal', label: 'Admin Portal' });
+  } else if (currentUser && hasActiveMembership) {
+    navItems.push({ id: 'member-dashboard', label: 'Member Dashboard' });
+  }
 
   return (
     <header className="fixed top-0 w-full z-50 bg-[#0d0e13]/85 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
@@ -172,13 +175,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          {/* Join Now CTA for logged in users, or grouped auth buttons for guests */}
-          {currentUser ? (
+          {/* Action Buttons */}
+          {isAdminRole(currentUser?.role) ? (
+            // Admins don't need a Renew Plan button in the navbar
+            <div className="hidden md:block w-[100px]" /> 
+          ) : currentUser ? (
             <button
               onClick={() => onOpenCheckout()}
               className="hidden md:inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#10b981] text-[#00422b] text-xs font-bold shadow-[0_0_20px_rgba(16,185,129,0.35)] hover:shadow-[0_0_26px_rgba(16,185,129,0.55)] hover:scale-[1.02] transition-all tracking-wide cursor-pointer"
             >
-              Renew Plan
+              {hasActiveMembership ? 'Renew Plan' : 'Join Now'}
             </button>
           ) : (
             <div className="flex items-center gap-2">
@@ -273,23 +279,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <span className="text-[10px] text-[#c0c1ff] font-mono">FR-008</span>
                         </button>
 
-                        {/* Admin demo preview helper */}
-                        {onSwitchPersona && (
-                          <button
-                            onClick={() => {
-                              onSwitchPersona('usr_member_1');
-                              setShowUserMenu(false);
-                              setActiveTab('member-dashboard');
-                            }}
-                            className="w-full flex items-center justify-between p-2 rounded-xl text-xs bg-[#121318] text-[#bbcabf] hover:text-[#4edea3] hover:bg-[#292a2f] transition-all"
-                            title="Preview member view"
-                          >
-                            <div className="flex items-center gap-2">
-                              <UserIcon className="w-3.5 h-3.5" />
-                              <span>Switch to Member Preview</span>
-                            </div>
-                          </button>
-                        )}
+
                       </div>
                     ) : (
                       <div className="space-y-1.5 mb-3">

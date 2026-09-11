@@ -70,7 +70,7 @@ export const PlansView: React.FC<PlansViewProps> = ({ plans, onSelectPlan }) => 
       {/* Plan Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
         {filteredPlans.map((plan) => {
-          const isPro = plan.isPopular || plan.id === 'plan_pro';
+          const isPro = plan.isPopular;
           return (
             <div
               key={plan.id}

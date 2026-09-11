@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { query } from '../../config/db';
 import { AppError } from '../../utils/customError';
 import { ICheckInPayload } from './attendance.interface';
@@ -19,7 +20,7 @@ export const AttendanceService = {
       throw new AppError('Member or RFID Pass not recognized at turnstile', 404);
     }
 
-    const attendanceId = `att_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    const attendanceId = crypto.randomUUID();
     const zone = payload.zone || 'Zone 01 • Heavy Olympic & Power Racks';
 
     const insertRes = await query(

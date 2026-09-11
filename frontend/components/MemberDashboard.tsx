@@ -154,6 +154,46 @@ export const MemberDashboard: React.FC<MemberDashboardProps> = ({
     );
   }
 
+  // If user is logged in but doesn't have an active or paused membership, block access
+  if (!activeMembership || (activeMembership.status !== 'ACTIVE' && activeMembership.status !== 'PAUSED')) {
+    return (
+      <div className="w-full max-w-lg mx-auto px-4 py-24 text-center space-y-6">
+        <div className="w-16 h-16 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-400 mx-auto flex items-center justify-center shadow-lg">
+          <ShieldCheck className="w-8 h-8" />
+        </div>
+        <div>
+          <span className="text-[11px] text-red-400 uppercase font-bold tracking-widest">
+            Access Restricted
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#e3e1e9] mt-2">
+            Active Subscription Required
+          </h2>
+          <p className="text-xs sm:text-sm text-[#bbcabf] mt-2 leading-relaxed">
+            Only subscribed members can access the Member Dashboard. Please purchase a membership plan to unlock all features, view invoices, and manage your profile.
+          </p>
+        </div>
+
+        <div className="p-6 rounded-2xl bg-[#1a1b21] border border-white/[0.08] space-y-3 shadow-xl">
+          <button
+            onClick={() => onOpenCheckout()}
+            className="w-full py-3 px-4 rounded-xl bg-[#10b981] hover:bg-[#4edea3] text-[#003824] text-xs font-bold transition-all shadow-md cursor-pointer"
+          >
+            View Plans & Subscribe
+          </button>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="w-full py-3 px-4 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white text-xs font-bold border border-white/10 transition-all cursor-pointer mt-2 flex justify-center items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-10 space-y-8">
       {/* Dashboard Top Header */}

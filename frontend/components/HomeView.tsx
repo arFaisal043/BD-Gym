@@ -19,6 +19,7 @@ import {
   BrainCircuit
 } from 'lucide-react';
 import type { MembershipPlan, Trainer, Facility, FAQ } from '../types';
+import { ScrollReveal } from './ScrollReveal';
 
 interface HomeViewProps {
   plans: MembershipPlan[];
@@ -220,6 +221,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* Facilities Showcase Section */}
       <section className="w-full py-16 relative">
+        <ScrollReveal>
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
@@ -353,10 +355,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* Coach Flow AI Concierge Showcase */}
       <section className="w-full py-16 relative overflow-hidden bg-gradient-to-b from-[#121318] via-[#16171d] to-[#121318]">
+        <ScrollReveal>
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           <div className="rounded-3xl p-8 sm:p-12 bg-[#1a1b21]/90 border border-emerald-500/20 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
@@ -443,10 +447,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* Membership Plans Section (In BDT ৳ with SSLCOMMERZ) */}
       <section className="w-full py-16 relative" id="plans-section">
+        <ScrollReveal>
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-[11px] text-[#4edea3] uppercase font-bold tracking-widest">
@@ -462,7 +468,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {plans.map((plan) => {
-              const isPro = plan.isPopular || plan.id === 'plan_pro';
+              const isPro = plan.isPopular;
               return (
                 <div
                   key={plan.id}
@@ -536,10 +542,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             })}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* Elite Trainers Showcase Section */}
       <section className="w-full py-16 relative bg-[#0d0e13]/50">
+        <ScrollReveal>
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
@@ -602,10 +610,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             ))}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* Trust & Payment Security Banner */}
       <section className="w-full py-8 relative">
+        <ScrollReveal>
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           <div className="rounded-2xl bg-gradient-to-r from-[#1a1b21] via-[#1e1f25] to-[#1a1b21] border border-white/10 p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="absolute -right-16 -top-16 w-64 h-64 bg-[#10b981]/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -646,10 +656,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* Athlete Stories & FAQ Section */}
       <section className="w-full py-16 relative">
+        <ScrollReveal>
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Left: Athlete Stories */}
@@ -750,6 +762,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
     </div>
   );
