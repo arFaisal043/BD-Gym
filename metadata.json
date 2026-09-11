@@ -1,0 +1,7 @@
+{
+  "name": "GymFlow BD",
+  "description": "Dhaka's premier tech-enabled fitness center and gym membership management platform in Banani with SSLCOMMERZ payment integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
