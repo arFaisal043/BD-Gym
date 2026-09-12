@@ -121,8 +121,19 @@ export interface Notification {
   userId: string;
   title: string;
   message: string;
-  type: 'PAYMENT' | 'MEMBERSHIP' | 'SYSTEM';
+  type: string;
   isRead: boolean;
+  createdAt: string;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  content: string;
+  rating: number;
+  initials: string;
+  themeColor: string;
   createdAt: string;
 }
 

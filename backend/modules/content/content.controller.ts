@@ -36,7 +36,12 @@ export const ContentController = {
   }),
 
   getSensors: catchAsync(async (_req: Request, res: Response) => {
-    const stats = ContentService.getGymSensors();
+    const stats = await ContentService.getGymSensors();
     res.status(200).json({ stats });
+  }),
+
+  getTestimonials: catchAsync(async (_req: Request, res: Response) => {
+    const testimonials = await ContentService.getTestimonials();
+    res.status(200).json({ testimonials });
   }),
 };

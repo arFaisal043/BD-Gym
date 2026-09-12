@@ -12,6 +12,7 @@ router.post('/trainers/:id/book-induction', ContentController.bookTrainer);
 // Facilities and FAQs
 router.get('/facilities', ContentController.getFacilities);
 router.get('/faqs', ContentController.getFaqs);
+router.get('/testimonials', ContentController.getTestimonials);
 
 // Inquiries
 router.post('/contact', ContentController.saveInquiry);

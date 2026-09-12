@@ -206,6 +206,20 @@ export const initDB = async (): Promise<void> => {
       );
     `);
 
+    // 11. Testimonials table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS testimonials (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        name VARCHAR(255) NOT NULL,
+        role VARCHAR(255) NOT NULL,
+        content TEXT NOT NULL,
+        rating INT DEFAULT 5,
+        initials VARCHAR(10) NOT NULL,
+        theme_color VARCHAR(50) DEFAULT 'emerald',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     client.release();
     console.log('[Neon PostgreSQL] All application tables initialized successfully.');
 

@@ -23,7 +23,9 @@ import type {
   Trainer, 
   Facility, 
   FAQ, 
-  Notification 
+  Notification,
+  GymStats,
+  Testimonial
 } from './types';
 
 export default function App() {
@@ -36,6 +38,8 @@ export default function App() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeMembership, setActiveMembership] = useState<Membership | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [stats, setStats] = useState<GymStats | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   // Modals
   const [checkoutPlan, setCheckoutPlan] = useState<MembershipPlan | null>(null);
@@ -44,11 +48,12 @@ export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showGeminiChat, setShowGeminiChat] = useState(false);
   const [initialChatPrompt, setInitialChatPrompt] = useState<string | undefined>(undefined);
+  const [pendingCheckout, setPendingCheckout] = useState<{ active: boolean, planId?: string }>({ active: false });
 
   // Initial Data Fetching
   const loadData = async () => {
     try {
-      const [userRes, plansRes, trainersRes, facRes, faqRes, notifRes, memRes, payRes] = await Promise.all([
+      const [userRes, plansRes, trainersRes, facRes, faqRes, notifRes, memRes, payRes, statsRes, testRes] = await Promise.all([
         api.getCurrentUser().catch(() => ({ user: null as any })),
         api.getPlans().catch(() => ({ plans: [] })),
         api.getTrainers().catch(() => ({ trainers: [] })),
@@ -57,6 +62,8 @@ export default function App() {
         api.getNotifications().catch(() => ({ notifications: [] })),
         api.getMyMemberships().catch(() => ({ memberships: [], activeMembership: null })),
         api.getMyPayments().catch(() => ({ payments: [] })),
+        api.getGymSensorStats().catch(() => ({ stats: null })),
+        api.getTestimonials().catch(() => ({ testimonials: [] }))
       ]);
 
       if (userRes?.user) setCurrentUser(userRes.user);
@@ -67,6 +74,8 @@ export default function App() {
       if (notifRes?.notifications) setNotifications(notifRes.notifications);
       if (memRes?.activeMembership) setActiveMembership(memRes.activeMembership);
       if (payRes?.payments) setPayments(payRes.payments);
+      if (statsRes?.stats) setStats(statsRes.stats);
+      if (testRes?.testimonials) setTestimonials(testRes.testimonials);
     } catch (e) {
       console.error('Error loading GymFlow BD data:', e);
     }
@@ -130,6 +139,12 @@ export default function App() {
   };
 
   const handleOpenCheckout = (planId?: string) => {
+    if (!currentUser) {
+      setPendingCheckout({ active: true, planId });
+      setShowAuthModal(true);
+      return;
+    }
+
     if (planId) {
       const found = plans.find(p => p.id === planId);
       if (found) {
@@ -175,7 +190,9 @@ export default function App() {
             trainers={trainers}
             facilities={facilities}
             faqs={faqs}
-            onSelectPlan={(plan) => setCheckoutPlan(plan)}
+            stats={stats}
+            testimonials={testimonials}
+            onSelectPlan={(plan) => handleOpenCheckout(plan.id)}
             onBookTrainer={(trainer) => setInductionTrainer(trainer)}
             onOpenVirtualTour={() => setShowVirtualTour(true)}
             onNavigateTab={(tab) => setActiveTab(tab)}
@@ -189,7 +206,7 @@ export default function App() {
         {activeTab === 'plans-and-pricing' && (
           <PlansView
             plans={plans}
-            onSelectPlan={(plan) => setCheckoutPlan(plan)}
+            onSelectPlan={(plan) => handleOpenCheckout(plan.id)}
           />
         )}
 
@@ -269,9 +286,21 @@ export default function App() {
       {showAuthModal && (
         <AuthModal
           onClose={() => setShowAuthModal(false)}
-          onSuccess={(user) => {
+          onSuccess={async (user) => {
             setCurrentUser(user);
-            loadData();
+            await loadData();
+            
+            if (pendingCheckout.active) {
+              const pId = pendingCheckout.planId;
+              if (pId) {
+                const found = plans.find(p => p.id === pId);
+                if (found) setCheckoutPlan(found);
+              } else {
+                const defaultPlan = plans.find(p => p.isPopular) || plans[0];
+                if (defaultPlan) setCheckoutPlan(defaultPlan);
+              }
+              setPendingCheckout({ active: false });
+            }
           }}
         />
       )}

@@ -18,7 +18,7 @@ import {
   Zap,
   BrainCircuit
 } from 'lucide-react';
-import type { MembershipPlan, Trainer, Facility, FAQ } from '../types';
+import type { MembershipPlan, Trainer, Facility, FAQ, GymStats, Testimonial } from '../types';
 import { ScrollReveal } from './ScrollReveal';
 
 interface HomeViewProps {
@@ -26,6 +26,8 @@ interface HomeViewProps {
   trainers: Trainer[];
   facilities: Facility[];
   faqs: FAQ[];
+  stats: GymStats | null;
+  testimonials: Testimonial[];
   onSelectPlan: (plan: MembershipPlan) => void;
   onBookTrainer: (trainer: Trainer) => void;
   onOpenVirtualTour: () => void;
@@ -38,6 +40,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
   trainers,
   facilities,
   faqs,
+  stats,
+  testimonials,
   onSelectPlan,
   onBookTrainer,
   onOpenVirtualTour,
@@ -148,7 +152,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       />
                     </svg>
                     <div className="absolute flex flex-col items-center text-center">
-                      <span className="text-3xl font-black text-[#e3e1e9] tracking-tight">63%</span>
+                      <span className="text-3xl font-black text-[#e3e1e9] tracking-tight">{stats?.occupancyRate || 63}%</span>
                       <span className="text-[11px] uppercase tracking-wider text-[#bbcabf] font-semibold">
                         Floor Density
                       </span>
@@ -163,11 +167,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="mt-3 pt-3 grid grid-cols-2 gap-2 text-center bg-[#0d0e13]/60 rounded-xl p-2.5 border border-white/[0.04]">
                   <div>
                     <p className="text-[11px] text-[#bbcabf]">Active RFID Badges</p>
-                    <p className="text-sm font-bold text-[#4cd7f6] mt-0.5">87 Athletes</p>
+                    <p className="text-sm font-bold text-[#4cd7f6] mt-0.5">{stats?.activeRfidAthletes || 87} Athletes</p>
                   </div>
                   <div>
                     <p className="text-[11px] text-[#bbcabf]">HVAC Clean Air</p>
-                    <p className="text-sm font-bold text-[#4edea3] mt-0.5">99.4% AQI</p>
+                    <p className="text-sm font-bold text-[#4edea3] mt-0.5">{stats?.aqiPercentage || 99.4}% AQI</p>
                   </div>
                 </div>
               </div>
@@ -181,7 +185,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xl font-black text-[#e3e1e9]">2,500+</p>
+                <p className="text-xl font-black text-[#e3e1e9]">{stats?.totalMembers ? `${stats.totalMembers}+` : '2,500+'}</p>
                 <p className="text-xs text-[#bbcabf]">Active Members</p>
               </div>
             </div>
@@ -191,7 +195,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Award className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xl font-black text-[#e3e1e9]">18+</p>
+                <p className="text-xl font-black text-[#e3e1e9]">{stats?.certifiedCoaches ? `${stats.certifiedCoaches}+` : '18+'}</p>
                 <p className="text-xs text-[#bbcabf]">Certified Coaches</p>
               </div>
             </div>
@@ -201,7 +205,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Maximize2 className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xl font-black text-[#e3e1e9]">15,000</p>
+                <p className="text-xl font-black text-[#e3e1e9]">{stats?.floorAreaSqFt?.toLocaleString() || '15,000'}</p>
                 <p className="text-xs text-[#bbcabf]">Sq Ft Luxury Floor</p>
               </div>
             </div>
@@ -211,7 +215,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xl font-black text-[#e3e1e9]">6am - 11pm</p>
+                <p className="text-xl font-black text-[#e3e1e9]">{stats?.operatingHours || '6am - 11pm'}</p>
                 <p className="text-xs text-[#bbcabf]">Open Daily In Banani</p>
               </div>
             </div>
@@ -675,47 +679,35 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </h2>
               </div>
 
-              {/* Testimonial 1 */}
-              <div className="p-6 rounded-2xl bg-[#1a1b21]/90 border border-white/[0.08] backdrop-blur-xl shadow-lg relative">
-                <div className="flex items-center gap-1 text-[#4edea3] mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-xs sm:text-sm text-[#e3e1e9] italic leading-relaxed">
-                  "GymFlow BD completely altered my schedule in Banani. Paying through bKash took 15 seconds, and scanning in with the app QR code before my morning meetings is as seamless as Singapore gyms."
-                </p>
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#10b981]/20 border border-[#10b981]/30 flex items-center justify-center text-xs font-bold text-[#4edea3]">
-                    SH
+              {/* Dynamic Testimonials */}
+              {testimonials.map((testimonial) => {
+                const colorHex = testimonial.themeColor === 'cyan' ? '#4cd7f6' : '#4edea3';
+                const bgHex = testimonial.themeColor === 'cyan' ? '#4cd7f6' : '#10b981';
+                return (
+                  <div key={testimonial.id} className="p-6 rounded-2xl bg-[#1a1b21]/90 border border-white/[0.08] backdrop-blur-xl shadow-lg relative">
+                    <div className="flex items-center gap-1 mb-3" style={{ color: colorHex }}>
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#e3e1e9] italic leading-relaxed">
+                      "{testimonial.content}"
+                    </p>
+                    <div className="mt-4 flex items-center gap-3">
+                      <div 
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ backgroundColor: `${bgHex}33`, borderColor: `${bgHex}4D`, color: colorHex, borderWidth: '1px' }}
+                      >
+                        {testimonial.initials}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-[#e3e1e9]">{testimonial.name}</p>
+                        <p className="text-[11px] text-[#bbcabf]">{testimonial.role}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-[#e3e1e9]">Shakib Hossain</p>
-                    <p className="text-[11px] text-[#bbcabf]">Corporate Tech Lead • Member since 2023</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Testimonial 2 */}
-              <div className="p-6 rounded-2xl bg-[#1a1b21]/90 border border-white/[0.08] backdrop-blur-xl shadow-lg relative">
-                <div className="flex items-center gap-1 text-[#4cd7f6] mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-xs sm:text-sm text-[#e3e1e9] italic leading-relaxed">
-                  "The powerlifting zone has true Olympic Eleiko bars that never wobble. Coach Tanvir dialed in my bench technique and added 25kg in just two months. The recovery steam suite is top-tier."
-                </p>
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#4cd7f6]/20 border border-[#4cd7f6]/30 flex items-center justify-center text-xs font-bold text-[#4cd7f6]">
-                    RA
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-[#e3e1e9]">Rashed Al-Mamun</p>
-                    <p className="text-[11px] text-[#bbcabf]">Competitive Powerlifter • Pro Tier Member</p>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
 
             {/* Right: FAQ Accordion */}

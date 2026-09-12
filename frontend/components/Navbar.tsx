@@ -50,14 +50,20 @@ export const Navbar: React.FC<NavbarProps> = ({
     navItems.push({ id: 'member-dashboard', label: 'Member Dashboard' });
   }
 
+  const handleNavClick = (tabId: string) => {
+    setActiveTab(tabId);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className="fixed top-0 w-full z-50 bg-[#0d0e13]/85 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
       <div className="h-20 w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => setActiveTab('home')}
-            className="flex items-center gap-2.5 text-left group"
+            onClick={() => handleNavClick('home')}
+            className="flex items-center gap-2.5 text-left group cursor-pointer"
           >
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#10b981] to-[#4cd7f6] p-[2px] shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               <div className="w-full h-full bg-[#121318] rounded-[6px] flex items-center justify-center">
@@ -77,8 +83,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${
+                onClick={() => handleNavClick(item.id)}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                   isActive
                     ? 'bg-[#292a2f] text-[#4edea3] font-bold shadow-[0_0_16px_rgba(78,222,163,0.2)]'
                     : 'text-[#bbcabf] hover:text-[#e3e1e9] hover:bg-white/[0.04]'
@@ -366,11 +372,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                setMobileMenuOpen(false);
-              }}
-              className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              onClick={() => handleNavClick(item.id)}
+              className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === item.id
                   ? 'bg-[#10b981]/15 text-[#4edea3] font-bold border border-[#10b981]/30'
                   : 'text-[#bbcabf] hover:text-white hover:bg-white/[0.04]'

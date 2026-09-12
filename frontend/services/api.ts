@@ -197,6 +197,11 @@ export const api = {
     return res.json();
   },
 
+  async getTestimonials(): Promise<{ testimonials: any[] }> {
+    const res = await fetch('/api/testimonials');
+    return res.json();
+  },
+
   async getNotifications(): Promise<{ notifications: Notification[] }> {
     const res = await fetch('/api/notifications');
     return res.json();

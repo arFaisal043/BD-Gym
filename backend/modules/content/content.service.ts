@@ -134,15 +134,27 @@ export const ContentService = {
   /**
    * Live facility sensors telemetry
    */
-  getGymSensors() {
+  async getGymSensors() {
+    const activeMembersRes = await query("SELECT count(*) AS total FROM memberships WHERE status = 'ACTIVE'");
+    const totalUsersRes = await query('SELECT count(*) AS total FROM users');
+    const trainersRes = await query("SELECT count(*) AS total FROM trainers WHERE is_active = TRUE");
+
     return {
-      occupancyRate: 63,
-      activeRfidAthletes: 87,
-      aqiPercentage: 99.4,
-      totalMembers: 2500,
-      certifiedCoaches: 18,
+      occupancyRate: 63, // Simulated for now since no IoT hardware
+      activeRfidAthletes: parseInt(activeMembersRes.rows[0].total, 10),
+      aqiPercentage: 99.4, // Simulated
+      totalMembers: parseInt(totalUsersRes.rows[0].total, 10),
+      certifiedCoaches: parseInt(trainersRes.rows[0].total, 10),
       floorAreaSqFt: 15000,
       operatingHours: '6:00 AM – 11:00 PM',
     };
+  },
+
+  /**
+   * Get all testimonials
+   */
+  async getTestimonials() {
+    const res = await query('SELECT id, name, role, content, rating, initials, theme_color AS "themeColor", created_at AS "createdAt" FROM testimonials ORDER BY created_at ASC');
+    return res.rows;
   },
 };
